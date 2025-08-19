@@ -223,10 +223,10 @@ print(f"会話の合計メッセージ数: {len(history)}")
 
 
 ```python
-# google.generativeai ライブラリから types をインポート
-# types には Google Generative AI SDK 内で使用される様々なデータ構造や型が含まれています。
+# google.genai ライブラリから types をインポート
+# types には Google GenAI SDK 内で使用される様々なデータ構造や型が含まれています。
 # 例えば、system_instruction や、後述の temperature, max_output_tokens, top_p, top_k など。
-from google.generativeai import types
+from google.genai import types
 
 # システム インストラクションを使って、ロールやフォーマットを指定
 system_instruction_marketing_pro = """
@@ -251,9 +251,9 @@ system_instruction_marketing_pro = """
 response_pro = client.models.generate_content(
     model=MODEL_ID,
     contents="全く新しいフィットネスジムとその名前を考えて",
-    config={
-        "system_instruction": system_instruction_marketing_pro
-    }
+    config=types.GenerateContentConfig(
+        system_instruction=system_instruction_marketing_pro
+    )
 )
 
 print(response_pro.text)
