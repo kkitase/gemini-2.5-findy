@@ -1,5 +1,3 @@
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/02-jp-multimodal-capabilities.ipynb)
-
 # パート 2 - マルチモーダル機能 (画像、音声、動画、ドキュメント)
 
 `gemini-2.5-flash` のような Gemini モデルは、`client.models.generate_content()` を使用して、単一のプロンプトでテキスト、画像、音声、動画、ドキュメントを処理できます。これにより、さまざまなメディアタイプのコンテンツを理解し、生成できる強力なマルチモーダル AI アプリケーションを開発できます。
@@ -11,16 +9,28 @@
 - **ドキュメント処理**: PDF からの情報の抽出、レイアウトの理解
 - **マルチモーダル生成**: テキストプロンプトからの画像と音声の作成
 
+以降の解説は、Google Colab で実際にコードを実行しながら進めることを想定していますが、コードと解説を読み進めるだけでも学習できます。
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/02-jp-multimodal-capabilities.ipynb)
+
+## 重要: 環境の準備
+- [セットアップと認証](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=bfd5d261) のセクションを完了していることを確認してください。
+- もしエラーが出たら、[Gemini in Google Colab](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=7d140654) を使い、コードの説明やデバッグをして解決を試みてください。
+- 
 
 ```python
 # 画像処理ライブラリPillowをインストール
-# %pip install pillow
+%pip install pillow
+
+# 学習のためのリポジトリをクローン
+!git clone https://github.com/kkitase/gemini-2.5-findy.git
+%cd gemini-2.5-findy
 ```
 
-
 ```python
+# Gemini APIとHTTPリクエスト用のライブラリをインポート
 from google import genai
 from google.genai import types
+import requests
 
 # 画像処理のためのライブラリをインポート
 from PIL import Image
