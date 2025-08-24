@@ -167,11 +167,12 @@ file_id = client.files.upload(file=file_path)
 prompt = """エピソードのスクリプトを生成してください。タイムスタンプを含め、話者を特定してください。
 
 話者:
-- John
+- Speaker 1: セラフィーナ・クローデル（セラフィーナ）
+- Speaker 2: 天堂 健（けん）
 
 例:
-[00:00] Brady: こんにちは。
-[00:02] Tim: こんにちは、Brady。
+[00:00] セラフィーな: こんにちは。
+[00:02] けん: こんにちは。
 
 正しい話者名を含めることが重要です。前に特定した名前を使用してください。話者の名前が本当にわからない場合は、アルファベットの文字で特定してください。たとえば、不明な話者「A」と別の不明な話者「B」がいる場合があります。
 
@@ -264,10 +265,9 @@ print(response.text)
 
 Gemini API は直接の YouTube URL 分析をサポートしていて、動画コンテンツ分析に非常に便利です。
 
-YouTube 動画を確認
-
 
 ```python
+# YouTube 動画を確認
 # YouTube動画をノートブックに埋め込むためのライブラリをインポート
 from IPython.display import YouTubeVideo
 
@@ -281,10 +281,9 @@ video_id = youtube_url.split("v=")[1]
 YouTubeVideo(video_id)
 ```
 
-YouTune 動画を解析
-
 
 ```python
+# YouTune 動画を解析
 # 分析したいYouTube動画のURLを定義
 youtube_url = "https://www.youtube.com/watch?v=CN_a-uSK67s"
 
@@ -304,7 +303,7 @@ response = client.models.generate_content(
 
 # 生成されたテキストの応答を出力します
 print(response.text)
-
+```
 
 ## 7. PDF/ドキュメントファイルの操作
 
@@ -352,7 +351,7 @@ Gemini はコードの理解と生成にも大変優れています。[gitingest
 ```python
 from gitingest import ingest_async
 
-summary, tree, content = await ingest_async("https://github.com/philschmid/nextjs-gemini-2-0-pdf-structured-data")
+summary, tree, content = await ingest_async("https://github.com/google-gemini/veo-3-gemini-api-quickstart")
 ```
 
 
@@ -607,7 +606,7 @@ response_image = client.models.generate_content(
     model="gemini-2.0-flash-preview-image-generation",
     contents=prompt_avatar_image,
     config=types.GenerateContentConfig(
-      response_modalities=['TEXT', 'IMAGE'] # TEXT is often included by default or good practice
+      response_modalities=['TEXT', 'IMAGE'] 
     )
 )
 
