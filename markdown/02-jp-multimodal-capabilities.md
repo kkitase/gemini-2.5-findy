@@ -15,7 +15,10 @@
 ## 重要: 環境の準備
 - [セットアップと認証](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=bfd5d261) のセクションを完了していることを確認してください。
 - もしエラーが出たら、[Gemini in Google Colab](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=7d140654) を使い、コードの説明やデバッグをして解決を試みてください。
-- 
+
+
+## 画像処理を行う準備
+これから画像処理を行うので、必要なツールやライブラリのインストールなど、準備をします。
 
 ```python
 # 画像処理ライブラリPillowをインストール
