@@ -159,7 +159,7 @@ Gemini は、文字起こし、音声コンテンツ解析、話者識別、音�
 
 
 ```python
-file_path = "assets/data/audio.mp3"
+file_path = "assets/data/audio2.mp3"
 
 file_id = client.files.upload(file=file_path)
 
