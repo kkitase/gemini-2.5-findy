@@ -108,6 +108,97 @@ print(response.text)
 # ヒント: 02-jp-multimodal-capabilities.md の「1. 画像理解: 単一の画像」が参考になります。
 ```
 
+### 2.4. 画像生成、編集を試そう
+
+テキストから画像を生成してみましょう。Google の画像生成 AI「Imagen」が利用できます。
+
+**演習1: 「小樽」をテーマにした画像を生成する**
+```python
+# TODO:
+# 「雪が積もった美しい小樽運河の夜景、ガス灯が優しく灯っている」
+# というプロンプトで、Imagen を使って画像を生成してみましょう。
+from google.cloud import aiplatform
+from google.cloud.aiplatform import gapic as aip
+from vertexai.preview.generative_models import Image, Part
+
+# 画像生成クライアントの初期化
+# ※実際のコードではプロジェクトIDなどを設定する必要があります
+# imagen_client = ImageGenerationModel.from_pretrained("imagegeneration@006")
+
+# プロンプトを設定
+prompt = "雪が積もった美しい小樽運河の夜景、ガス灯が優しく灯っている"
+
+# Imagen モデルで画像を生成
+# response = imagen_client.generate_images(prompt=prompt, number_of_images=1)
+
+# print("画像が生成されました。")
+# response[0].show()
+```
+
+**演習2: プロンプトを工夫して、様々な画像を生成する**
+```python
+# TODO:
+# Imagen を使って、以下のテーマで画像を生成してみましょう。
+# 1. 「小樽のガラス工房で、職人が美しいグラスを作っている様子」
+# 2. 「サイバーパンク風のネオンが輝く未来の小樽」
+# 3. 「水彩画風の、ノスタルジックな雰囲気の小樽の坂道」
+```
+
+### 2.5. 動画生成、編集を試そう
+
+テキストや画像から動画を生成したり、簡単な編集を試したりしてみましょう。Google の動画生成 AI「Veo」や、動画編集ツール「FFmpeg」が利用できます。
+
+**演習1: テキストから動画を生成する**
+```python
+# TODO:
+# 「ドローンが小樽の美しい海岸線をゆっくりと飛んでいく、映画のような映像」
+# というプロンプトで、Veo を使って5秒程度の動画を生成してみましょう。
+# ※実際のコードではVEOモデルのクライアント初期化などが必要です
+
+# プロンプトを設定
+prompt = "ドローンが小樽の美しい海岸線をゆっくりと飛んでいく、映画のような映像"
+
+# Veo モデルで動画を生成
+# video_response = veo.generate_video(prompt=prompt, duration_seconds=5)
+
+# print("動画が生成されました。")
+```
+
+**演習2: 生成した画像から動画を生成する**
+```python
+# TODO:
+# 2.4で生成した「小樽運河の夜景」の画像を使って、Veo で
+# 「雪が静かに降り続く」ような動きのある動画を生成してみましょう。
+# ※実際のコードでは画像ファイルのパスを指定する必要があります
+
+# 画像パス (仮)
+# image_path = "path/to/your/generated_image.png"
+# image = Image.load_from_file(image_path)
+
+# プロンプトを設定
+# prompt = "雪が静かに降り続く"
+
+# Veo モデルで動画を生成
+# video_response = veo.generate_video(image=image, prompt=prompt, duration_seconds=5)
+
+# print("動画が生成されました。")
+```
+
+**演習3: 生成した動画をGIFアニメに変換する**
+```python
+# TODO:
+# 演習1または2で生成した動画を、FFmpeg を使ってGIFアニメに変換してみましょう。
+# ※実際のコードでは動画ファイルのパスを指定する必要があります
+
+# 動画パス (仮)
+# video_path = "path/to/your/generated_video.mp4"
+
+# FFmpeg でGIFに変換
+# ffmpeg.video_to_gif(input_video_uri=video_path, output_file_name="otaru.gif")
+
+# print("GIFアニメが生成されました。")
+```
+
 ---
 
 ## 3. AI エージェント開発入門
