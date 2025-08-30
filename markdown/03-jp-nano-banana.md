@@ -54,6 +54,9 @@ prompt = """
 全体の雰囲気は穏やかで達人のよう。縦長のポートレート。
 """
 
+# 変数を初期化
+image = None
+
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
     model=MODEL_ID,
@@ -140,6 +143,9 @@ display(image_to_edit)
 # 画像編集のプロンプト
 prompt = "この猫に、パーティー用の小さな帽子をかぶせてください。背景や猫の他の部分は変えないでください。"
 
+# 変数を初期化
+edited_image = None
+
 # モデルを呼び出して画像を編集
 response = client.models.generate_content(
     model=MODEL_ID,
@@ -188,7 +194,7 @@ prompt = """
 全体の配色は青と白を基調とし、クリーンで信頼感のある印象を与える。
 """
 
-# 初期化
+# 変数を初期化
 web_design_image = None # Initialize the variable
 
 # モデルを呼び出して画像を生成
@@ -258,7 +264,7 @@ prompt = """
 全体の配色はピンクと白を基調とし、春らしく華やかな印象を与える。
 """
 
-# 初期化
+# 変数を初期化
 web_design_image_cherry_blossom = None
 
 # モデルを呼び出して画像を生成
@@ -295,7 +301,7 @@ prompt = """
 エネルギッシュで爽快なイメージで、非常に高画質なこと。
 """
 
-# 初期化
+# 変数を初期化
 ad_image = None
 
 # モデルを呼び出して画像を生成
@@ -326,6 +332,7 @@ prompt = """
 商品の見え方や背景の雰囲気は維持してください。
 """
 
+# 変数を初期化
 ad_image_with_person = None
 
 # モデルを呼び出して画像を編集
@@ -356,6 +363,7 @@ prompt = """
 フォントのスタイルは元のロゴに似せてください。
 """
 
+# 変数を初期化
 ad_image_new_logo = None
 
 # モデルを呼び出して画像を編集
@@ -385,6 +393,7 @@ prompt = """
 背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。
 """
 
+# 変数を初期化
 ad_image_final = None
 
 # モデルを呼び出して画像を編集
@@ -412,11 +421,22 @@ display(ad_image_final)
 ```python
 # プロンプトを定義
 prompt = """
-ヨガの木のポーズをしている男性の全身写真。
-静かなヨガスタジオで、背景はミニマルで明るい。
-プロのカメラマンが高品質な機材で撮影したような、リアルな画像。
+以下の要件で画像を生成してください：
+
+- 被写体: ヨガの木のポーズをしている男性の全身
+- 場所: 静かなヨガスタジオ
+- 背景: ミニマルで明るい
+- スタイル: プロのカメラマンが高品質な機材で撮影したような、リアルな写真
 """
 
+# 上記プロンプトで写真を生成できない時は英語にしてみてください。
+# prompt = """
+# A full-body photograph of a man in the tree yoga pose.
+# The setting is a quiet yoga studio with a minimal and bright background.
+#The image should be realistic, as if taken by a professional photographer with high-quality equipment.
+# """
+
+# 変数を初期化
 person_image = None
 
 # モデルを呼び出して画像を生成
@@ -424,6 +444,10 @@ response = client.models.generate_content(
     model=MODEL_ID,
     contents=prompt,
 )
+
+# レスポンスの内容を確認
+print(prompt)
+print(response)
 
 # 結果から画像を抽出し、後続の処理で使えるように変数に格納する
 for part in response.candidates[0].content.parts:
@@ -454,6 +478,7 @@ prompt = """
 左の男性に、右のスケッチと同じポーズをとらせてください。
 """
 
+# 変数を初期化
 posed_image = None
 
 # モデルを呼び出して画像を編集
