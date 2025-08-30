@@ -88,11 +88,13 @@ Nano Banana の能力を最大限に引き出すには、プロンプトの書�
 ```python
 # 画像生成のためのプロンプト（指示文）
 prompt = """
-小さな竹の帽子をかぶった、幸せそうなレッサーパンダのかわいいスタイルのステッカー。
-緑の笹の葉をもぐもぐ食べている。
-デザインは太くクリーンな輪郭線、シンプルなセル画風の陰影、そして鮮やかなカラーパレットが特徴。
-背景は必ず白にすること。
+かわいいステッカーアート。幸せそうなレッサーパンダが小さな竹の帽子をかぶり、笹の葉を食べている。
+太くてクリーンな線、セル画風のシンプルな陰影、鮮やかな色使い。
+背景は白。
 """
+
+# 変数を初期化
+image = None
 
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
@@ -110,6 +112,11 @@ for part in response.candidates[0].content.parts:
 
 # Colab上に画像を表示
 display(image)
+```
+
+```python
+# TODO
+# 水彩画風や、油絵風など、他のスタイルも試してみましょう。
 ```
 
 ## 4. 画像を編集する
@@ -150,6 +157,12 @@ for part in response.candidates[0].content.parts:
 display(edited_image)
 ```
 
+
+```python
+# TODO
+# 他にも「この猫にサングラスをかけて」「この風景の空を夕焼けに変えて」など、様々な編集を試してみましょう。
+```
+
 このように、変更したい部分と、変更したくない部分を明確に指示することで、狙い通りの編集が可能になります。
 
 > **注**: 生成されたすべての画像には、信頼性検証のために SynthID ウォーターマークが含まれています。詳細は[公式ドキュメント](https://ai.google.dev/gemini-api/docs/image-generation?hl=ja) をご覧ください。
@@ -162,8 +175,8 @@ Nano Banana は、具体的なUIコンポーネントやレイアウト構造も
 # Webサイトデザインのプロンプト
 prompt = """
 モダンでミニマルな旅行アプリのランディングページのUIデザイン。
-ヒーローセクションには「あなたの知らない世界へ」というキャッチコピーと、夕暮れの美しいビーチの背景画像。
-その下には「行き先で探す」「テーマで探す」「予算で探す」という3つの特徴的な検索カードを配置。
+ヒーローセクションには「Explore the World Unknown」というキャッチコピーと、夕暮れの美しいビーチの背景画像。
+その下には「Search by Destination」「Search by Theme」「Search by Budget」という3つの特徴的な検索カードを配置。
 全体の配色は青と白を基調とし、クリーンで信頼感のある印象を与える。
 """
 
@@ -173,14 +186,18 @@ response = client.models.generate_content(
     contents=prompt,
 )
 
+# 初期化
+web_design_image = None # Initialize the variable
+
 # 結果を表示
 for part in response.candidates[0].content.parts:
   if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
       web_design_image = Image.open(BytesIO(part.inline_data.data))
       web_design_image.save('generated_lp_design.png')
       print("生成されたWebデザイン画像を 'generated_lp_design.png' として保存しました。")
+      break # Assuming only one image is expected
 
-# Colab上に画像を表示
+# Google Colab上に画像を表示
 display(web_design_image)
 ```
 
@@ -193,13 +210,15 @@ display(web_design_image)
 ```python
 # 広告写真のプロンプト
 prompt = """
-新しいエナジードリンク「SPARK」の広告写真。
-水滴がたくさんついた冷たいアルミ缶が、砕いた氷の上に置かれている。
+製品広告写真：新しいエナジードリンク「SPARK」のアルミ缶。
+缶は冷たく、たくさんの水滴がついており、砕いた氷の上に置かれている。
 背景はシャープでモダンな青いグラデーション。
-缶には「SPARK」という文字がスタイリッシュなフォントで描かれている。
-エネルギッシュで爽快なイメージ。
-非常に高画質で、広告に使用できるレベル。
+缶には「SPARK」の文字がスタイリッシュなフォントで描かれていること。
+エネルギッシュで爽快なイメージで、非常に高画質なこと。
 """
+
+# 初期化
+ad_image = None
 
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
@@ -208,7 +227,6 @@ response = client.models.generate_content(
 )
 
 # 結果を表示
-ad_image = None
 for part in response.candidates[0].content.parts:
   if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
       ad_image = Image.open(BytesIO(part.inline_data.data))
@@ -216,8 +234,7 @@ for part in response.candidates[0].content.parts:
       print("生成された広告画像を 'generated_drink_ad.png' として保存しました。")
 
 # Colab上に画像を表示
-if ad_image:
-    display(ad_image)
+display(ad_image)
 ```
 
 ### 6.1. 生成した画像に人物を追加する
@@ -226,7 +243,12 @@ if ad_image:
 
 ```python
 # 人物を追加するプロンプト
-prompt = "このドリンクの缶を、スポーティーな若い女性が笑顔で持っているように編集してください。商品の見え方や背景の雰囲気は維持してください。"
+prompt = """
+製品広告写真：このドリンクの缶を、スポーティーな若い女性が笑顔で持っているように編集してください。
+商品の見え方や背景の雰囲気は維持してください。
+"""
+
+ad_image_with_person = None
 
 # モデルを呼び出して画像を編集
 response = client.models.generate_content(
@@ -235,7 +257,6 @@ response = client.models.generate_content(
 )
 
 # 結果を表示
-ad_image_with_person = None
 for part in response.candidates[0].content.parts:
   if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
       ad_image_with_person = Image.open(BytesIO(part.inline_data.data))
@@ -243,8 +264,7 @@ for part in response.candidates[0].content.parts:
       print("人物を追加した画像を 'ad_with_person.png' として保存しました。")
 
 # Colab上に画像を表示
-if ad_image_with_person:
-    display(ad_image_with_person)
+display(ad_image_with_person)
 ```
 
 ### 6.2. 商品のロゴを変更する
@@ -253,7 +273,12 @@ if ad_image_with_person:
 
 ```python
 # ロゴを変更するプロンプト
-prompt = "缶に書かれている「SPARK」というロゴを、新しい「AQUA」というロゴに自然な形で変更してください。フォントのスタイルは元のロゴに似せてください。"
+prompt = """
+製品広告写真：缶に書かれている「SPARK」というロゴを、新しい「AQUA」というロゴに自然な形で変更してください。
+フォントのスタイルは元のロゴに似せてください。
+"""
+
+ad_image_new_logo = None
 
 # モデルを呼び出して画像を編集
 response = client.models.generate_content(
@@ -262,7 +287,6 @@ response = client.models.generate_content(
 )
 
 # 結果を表示
-ad_image_new_logo = None
 for part in response.candidates[0].content.parts:
   if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
       ad_image_new_logo = Image.open(BytesIO(part.inline_data.data))
@@ -270,8 +294,7 @@ for part in response.candidates[0].content.parts:
       print("ロゴを変更した画像を 'ad_new_logo.png' として保存しました。")
 
 # Colab上に画像を表示
-if ad_image_new_logo:
-    display(ad_image_new_logo)
+display(ad_image_new_logo)
 ```
 
 ### 6.3. 背景の色を調整する
@@ -280,7 +303,11 @@ if ad_image_new_logo:
 
 ```python
 # 背景色を変更するプロンプト
-prompt = "背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。"
+prompt = """
+背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。
+"""
+
+ad_image_final = None
 
 # モデルを呼び出して画像を編集
 response = client.models.generate_content(
@@ -289,7 +316,6 @@ response = client.models.generate_content(
 )
 
 # 結果を表示
-ad_image_final = None
 for part in response.candidates[0].content.parts:
   if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
       ad_image_final = Image.open(BytesIO(part.inline_data.data))
@@ -297,8 +323,7 @@ for part in response.candidates[0].content.parts:
       print("最終版の広告画像を 'ad_final.png' として保存しました。")
 
 # Colab上に画像を表示
-if ad_image_final:
-    display(ad_image_final)
+display(ad_image_final)
 ```
 このように、一度画像を生成してから、対話を繰り返すことで、細かな要望を反映させながら完成度を高めていくことができます。
 
