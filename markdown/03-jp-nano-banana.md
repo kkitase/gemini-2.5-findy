@@ -154,4 +154,197 @@ display(edited_image)
 
 > **注**: 生成されたすべての画像には、信頼性検証のために SynthID ウォーターマークが含まれています。詳細は[公式ドキュメント](https://ai.google.dev/gemini-api/docs/image-generation?hl=ja) をご覧ください。
 
-さあ、あなたも様々なプロンプトや手持ちの画像を使って、Nano Banana の無限の可能性を探求してみてください！
+## 5. Webサイトのランディングページをデザインする
+
+Nano Banana は、具体的なUIコンポーネントやレイアウト構造も理解できます。これを利用して、Webサイトのランディングページ（LP）のデザイン案を生成させてみましょう。
+
+```python
+# Webサイトデザインのプロンプト
+prompt = """
+モダンでミニマルな旅行アプリのランディングページのUIデザイン。
+ヒーローセクションには「あなたの知らない世界へ」というキャッチコピーと、夕暮れの美しいビーチの背景画像。
+その下には「行き先で探す」「テーマで探す」「予算で探す」という3つの特徴的な検索カードを配置。
+全体の配色は青と白を基調とし、クリーンで信頼感のある印象を与える。
+"""
+
+# モデルを呼び出して画像を生成
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=prompt,
+)
+
+# 結果を表示
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      web_design_image = Image.open(BytesIO(part.inline_data.data))
+      web_design_image.save('generated_lp_design.png')
+      print("生成されたWebデザイン画像を 'generated_lp_design.png' として保存しました。")
+
+# Colab上に画像を表示
+display(web_design_image)
+```
+
+## 6. 広告用の商品写真を生成し、対話的に編集する
+
+新商品の広告キャンペーンで使うような、プロフェッショナルで魅力的な画像を生成し、さらにそこから対話を通じて修正を加えていく過程を体験してみましょう。
+
+まずは、ベースとなる飲料の広告写真を作成します。
+
+```python
+# 広告写真のプロンプト
+prompt = """
+新しいエナジードリンク「SPARK」の広告写真。
+水滴がたくさんついた冷たいアルミ缶が、砕いた氷の上に置かれている。
+背景はシャープでモダンな青いグラデーション。
+缶には「SPARK」という文字がスタイリッシュなフォントで描かれている。
+エネルギッシュで爽快なイメージ。
+非常に高画質で、広告に使用できるレベル。
+"""
+
+# モデルを呼び出して画像を生成
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=prompt,
+)
+
+# 結果を表示
+ad_image = None
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      ad_image = Image.open(BytesIO(part.inline_data.data))
+      ad_image.save('generated_drink_ad.png')
+      print("生成された広告画像を 'generated_drink_ad.png' として保存しました。")
+
+# Colab上に画像を表示
+if ad_image:
+    display(ad_image)
+```
+
+### 6.1. 生成した画像に人物を追加する
+
+次に、この商品写真に人物を追加して、より魅力的な広告にしてみましょう。「この缶を人が持っているように」と指示します。
+
+```python
+# 人物を追加するプロンプト
+prompt = "このドリンクの缶を、スポーティーな若い女性が笑顔で持っているように編集してください。商品の見え方や背景の雰囲気は維持してください。"
+
+# モデルを呼び出して画像を編集
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=[prompt, ad_image], # テキストプロンプトと元の画像を渡す
+)
+
+# 結果を表示
+ad_image_with_person = None
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      ad_image_with_person = Image.open(BytesIO(part.inline_data.data))
+      ad_image_with_person.save('ad_with_person.png')
+      print("人物を追加した画像を 'ad_with_person.png' として保存しました。")
+
+# Colab上に画像を表示
+if ad_image_with_person:
+    display(ad_image_with_person)
+```
+
+### 6.2. 商品のロゴを変更する
+
+急なデザイン変更にも対応できます。缶に描かれたロゴを、別の名前に変更してみましょう。
+
+```python
+# ロゴを変更するプロンプト
+prompt = "缶に書かれている「SPARK」というロゴを、新しい「AQUA」というロゴに自然な形で変更してください。フォントのスタイルは元のロゴに似せてください。"
+
+# モデルを呼び出して画像を編集
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=[prompt, ad_image_with_person], # 人物追加後の画像をベースにする
+)
+
+# 結果を表示
+ad_image_new_logo = None
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      ad_image_new_logo = Image.open(BytesIO(part.inline_data.data))
+      ad_image_new_logo.save('ad_new_logo.png')
+      print("ロゴを変更した画像を 'ad_new_logo.png' として保存しました。")
+
+# Colab上に画像を表示
+if ad_image_new_logo:
+    display(ad_image_new_logo)
+```
+
+### 6.3. 背景の色を調整する
+
+最後に、商品のフレーバーに合わせて背景色を変更してみましょう。オレンジ味を想定して、背景を暖色系に変えてみます。
+
+```python
+# 背景色を変更するプロンプト
+prompt = "背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。"
+
+# モデルを呼び出して画像を編集
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=[prompt, ad_image_new_logo], # ロゴ変更後の画像をベースにする
+)
+
+# 結果を表示
+ad_image_final = None
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      ad_image_final = Image.open(BytesIO(part.inline_data.data))
+      ad_image_final.save('ad_final.png')
+      print("最終版の広告画像を 'ad_final.png' として保存しました。")
+
+# Colab上に画像を表示
+if ad_image_final:
+    display(ad_image_final)
+```
+このように、一度画像を生成してから、対話を繰り返すことで、細かな要望を反映させながら完成度を高めていくことができます。
+
+## 7. スケッチでポーズを指示して、人物を動かす
+
+Nano Banana の真骨頂ともいえるのが、複数の画像を組み合わせて編集する能力です。ここでは、簡単な棒人間のスケッチでポーズを指示し、実際の人物写真にそのポーズをとらせてみましょう。
+
+まず、ポーズの指示に使うスケッチと、元になる人物の写真を準備します。
+
+```python
+# サンプルのスケッチと人物写真をダウンロード
+!curl -o pose_sketch.jpg "https://storage.googleapis.com/generativeai-downloads/images/pose_sketch.png"
+!curl -o person.jpg "https://storage.googleapis.com/generativeai-downloads/images/person.jpg"
+
+# 画像を開いて表示
+sketch_image = Image.open('pose_sketch.jpg')
+person_image = Image.open('person.jpg')
+
+print("指示に使うスケッチ:")
+display(sketch_image)
+print("元になる人物写真:")
+display(person_image)
+```
+
+次に、これらの画像と「何をしてほしいか」をテキストで伝えます。
+
+```python
+# スケッチを使った画像編集のプロンプト
+prompt = "この人物（右の画像）に、左のスケッチと同じ、喜びにあふれたダイナミックなジャンプのポーズをとらせてください。服装、背景、人物の顔は元の写真のスタイルを維持してください。"
+
+# モデルを呼び出して画像を編集
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=[prompt, sketch_image, person_image], # テキスト、スケッチ画像、人物画像の3つをリストで渡す
+)
+
+# 結果を表示
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      posed_image = Image.open(BytesIO(part.inline_data.data))
+      posed_image.save('posed_person.png')
+      print("ポーズを編集した画像を 'posed_person.png' として保存しました。")
+
+# Colab上に画像を表示
+display(posed_image)
+```
+このように、スケッチという曖昧な情報からでも、モデルが意図を汲み取って、写真の人物に自然なポーズをとらせることができるのです。
+
+さあ、あなたも様々なプロンプトや手持ちの画像を使って、Nano Banana の驚くべき可能性を探求してみてください！
