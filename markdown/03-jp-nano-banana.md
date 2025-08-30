@@ -171,6 +171,14 @@ display(edited_image)
 
 Nano Banana は、具体的なUIコンポーネントやレイアウト構造も理解できます。これを利用して、Webサイトのランディングページ（LP）のデザイン案を生成させてみましょう。
 
+## 5. WebサイトのUIデザイン
+
+Nano Banana は、具体的な UI コンポーネントやレイアウト構造も理解できます。これを利用して、Web サイトのランディングページ（LP）のデザイン案を生成させてみましょう。
+
+### 5.1. 基本的なLPデザイン
+
+まずは、基本的な旅行アプリのLPをデザインします。
+
 ```python
 # Webサイトデザインのプロンプト
 prompt = """
@@ -180,14 +188,14 @@ prompt = """
 全体の配色は青と白を基調とし、クリーンで信頼感のある印象を与える。
 """
 
+# 初期化
+web_design_image = None # Initialize the variable
+
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
     model=MODEL_ID,
     contents=prompt,
 )
-
-# 初期化
-web_design_image = None # Initialize the variable
 
 # 結果を表示
 for part in response.candidates[0].content.parts:
@@ -199,6 +207,76 @@ for part in response.candidates[0].content.parts:
 
 # Google Colab上に画像を表示
 display(web_design_image)
+```
+
+### 5.2. メニューの追加
+
+次に、生成したLPにグローバルナビゲーションメニューを追加してみましょう。
+
+```python
+# メニュー追加のプロンプト
+prompt = """
+モダンでミニマルな旅行アプリのランディングページのUIデザイン。
+ヘッダーに「Home」「Destinations」「About Us」「Contact」のナビゲーションメニューを追加。
+ヒーローセクションには「Explore the World Unknown」というキャッチコピーと、夕暮れの美しいビーチの背景画像。
+その下には「Search by Destination」「Search by Theme」「Search by Budget」という3つの特徴的な検索カードを配置。
+全体の配色は青と白を基調とし、クリーンで信頼感のある印象を与える。
+"""
+
+# 初期化
+web_design_image_with_menu = None
+
+# モデルを呼び出して画像を生成
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=prompt,
+)
+
+# 結果を表示
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      web_design_image_with_menu = Image.open(BytesIO(part.inline_data.data))
+      web_design_image_with_menu.save('generated_lp_design_with_menu.png')
+      print("メニュー付きのWebデザイン画像を 'generated_lp_design_with_menu.png' として保存しました。")
+      break
+
+# Google Colab上に画像を表示
+display(web_design_image_with_menu)
+```
+
+### 5.3. バナーの変更
+
+最後に、ヒーローセクションの背景画像を、より具体的なテーマに変更してみましょう。
+
+```python
+# バナー変更のプロンプト
+prompt = """
+モダンでミニマルな旅行アプリのランディングページのUIデザイン。
+ヘッダーに「Home」「Destinations」「About Us」「Contact」のナビゲーションメニュー。
+ヒーローセクションには「Explore the World Unknown」というキャッチコピーと、日本の桜並木の美しい背景画像。
+その下には「Search by Destination」「Search by Theme」「Search by Budget」という3つの特徴的な検索カードを配置。
+全体の配色はピンクと白を基調とし、春らしく華やかな印象を与える。
+"""
+
+# 初期化
+web_design_image_cherry_blossom = None
+
+# モデルを呼び出して画像を生成
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=prompt,
+)
+
+# 結果を表示
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      web_design_image_cherry_blossom = Image.open(BytesIO(part.inline_data.data))
+      web_design_image_cherry_blossom.save('generated_lp_design_cherry_blossom.png')
+      print("桜のWebデザイン画像を 'generated_lp_design_cherry_blossom.png' として保存しました。")
+      break
+
+# Google Colab上に画像を表示
+display(web_design_image_cherry_blossom)
 ```
 
 ## 6. 広告用の商品写真を生成し、対話的に編集する
@@ -327,49 +405,74 @@ display(ad_image_final)
 ```
 このように、一度画像を生成してから、対話を繰り返すことで、細かな要望を反映させながら完成度を高めていくことができます。
 
-## 7. スケッチでポーズを指示して、人物を動かす
+## 7. AIで生成した人物のポーズを、スケッチで変更する
 
-Nano Banana の真骨頂ともいえるのが、複数の画像を組み合わせて編集する能力です。ここでは、簡単な棒人間のスケッチでポーズを指示し、実際の人物写真にそのポーズをとらせてみましょう。
-
-まず、ポーズの指示に使うスケッチと、元になる人物の写真を準備します。
+まず、ベースとなる人物画像をAIで生成します。今回は「ヨガの木のポーズをしている男性」を生成してみましょう。
 
 ```python
-# サンプルのスケッチと人物写真をダウンロード
-!curl -o pose_sketch.jpg "https://storage.googleapis.com/generativeai-downloads/images/pose_sketch.png"
-!curl -o person.jpg "https://storage.googleapis.com/generativeai-downloads/images/person.jpg"
+# プロンプトを定義
+prompt = """
+ヨガの木のポーズをしている男性の全身写真。
+静かなヨガスタジオで、背景はミニマルで明るい。
+プロのカメラマンが高品質な機材で撮影したような、リアルな画像。
+"""
 
-# 画像を開いて表示
-sketch_image = Image.open('pose_sketch.jpg')
-person_image = Image.open('person.jpg')
+person_image = None
 
-print("指示に使うスケッチ:")
-display(sketch_image)
-print("元になる人物写真:")
+# モデルを呼び出して画像を生成
+response = client.models.generate_content(
+    model=MODEL_ID,
+    contents=prompt,
+)
+
+# 結果から画像を抽出し、後続の処理で使えるように変数に格納する
+for part in response.candidates[0].content.parts:
+  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+      person_image = Image.open(BytesIO(part.inline_data.data))
+      person_image.save('generated_yoga_person_male.png')
+      print("生成された人物画像を 'generated_yoga_person_male.png' として保存しました。")
+      break
+
+# 生成された画像を表示
+print("生成された元になる人物写真:")
 display(person_image)
 ```
 
-次に、これらの画像と「何をしてほしいか」をテキストで伝えます。
+次に、この生成した男性の画像に、簡単な棒人間のスケッチで別のポーズをとらせてみましょう。
 
 ```python
+# ポーズ指示に使うスケッチのパス
+sketch_image_path = '/content/gemini-2.5-findy/assets/data/boningen4.jpeg'
+sketch_image = Image.open(sketch_image_path)
+
+print("指示に使うスケッチ:")
+display(sketch_image)
+
 # スケッチを使った画像編集のプロンプト
-prompt = "この人物（右の画像）に、左のスケッチと同じ、喜びにあふれたダイナミックなジャンプのポーズをとらせてください。服装、背景、人物の顔は元の写真のスタイルを維持してください。"
+prompt = """
+ポーズを変更して
+左の男性に、右のスケッチと同じポーズをとらせてください。
+"""
+
+posed_image = None
 
 # モデルを呼び出して画像を編集
+# person_imageがNoneでないことを確認
 response = client.models.generate_content(
     model=MODEL_ID,
-    contents=[prompt, sketch_image, person_image], # テキスト、スケッチ画像、人物画像の3つをリストで渡す
+    contents=[prompt, person_image, sketch_image], # テキスト、スケッチ画像、生成した人物画像の3つをリストで渡す
 )
 
 # 結果を表示
 for part in response.candidates[0].content.parts:
-  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
-      posed_image = Image.open(BytesIO(part.inline_data.data))
-      posed_image.save('posed_person.png')
-      print("ポーズを編集した画像を 'posed_person.png' として保存しました。")
+    if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+        posed_image = Image.open(BytesIO(part.inline_data.data))
+        posed_image.save('posed_person_male.png')
+        print("ポーズを編集した画像を 'posed_person_male.png' として保存しました。")
+        break
 
-# Colab上に画像を表示
 display(posed_image)
 ```
-このように、スケッチという曖昧な情報からでも、モデルが意図を汲み取って、写真の人物に自然なポーズをとらせることができるのです。
+このように、AIで生成した画像に対して、さらに別の指示を加えて編集していくことが可能です。
 
 さあ、あなたも様々なプロンプトや手持ちの画像を使って、Nano Banana の驚くべき可能性を探求してみてください！
