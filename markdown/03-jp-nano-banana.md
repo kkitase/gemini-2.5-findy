@@ -508,6 +508,3 @@ for part in response.candidates[0].content.parts:
 
 display(posed_image)
 ```
-このように、AIで生成した画像に対して、さらに別の指示を加えて編集していくことが可能です。
-
-さあ、あなたも様々なプロンプトや手持ちの画像を使って、Nano Banana の驚くべき可能性を探求してみてください！
