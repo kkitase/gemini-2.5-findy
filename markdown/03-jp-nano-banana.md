@@ -3,9 +3,10 @@
 「テキストから、あっという間にすごいクオリティの画像が作れたら…」
 「写真の一部だけを、まるで魔法のように自然に修正したい…」
 
-そんな願いを叶える、Google の最新画像生成 AI モデル、通称「Nano Banana」こと `gemini-2.5-flash-image-preview` が登場しました。この記事では、その驚くべき機能と使い方を、ハンズオン形式で学びます。[「Google Colab」](https://colab.research.google.com/) を使って、サンプルコードを実行しながら進めるので、誰でも簡単に最新の画像生成 AI を体験できます。
+そんな願いを叶える、Google の最新画像生成 AI モデル、通称「Nano Banana」こと `gemini-2.5-flash-image-preview` が登場しました。
+![alt text](../assets/data/banana.png)
+この記事では、その驚くべき機能と使い方を、ハンズオン形式で学びます。[「Google Colab」](https://colab.research.google.com/) を使って、サンプルコードを実行しながら進めるので、誰でも簡単に最新の画像生成 AI を体験できます。
 
-さあ、あなたも言葉を絵に変える魔法を、その手で体験してみませんか？
 
 以下のボタンから Notebook を開いて進めましょう。
 
@@ -444,10 +445,6 @@ response = client.models.generate_content(
     model=MODEL_ID,
     contents=prompt,
 )
-
-# レスポンスの内容を確認
-print(prompt)
-print(response)
 
 # 結果から画像を抽出し、後続の処理で使えるように変数に格納する
 for part in response.candidates[0].content.parts:
