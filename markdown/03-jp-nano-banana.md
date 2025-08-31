@@ -14,9 +14,12 @@
 
 以降の解説は、Google Colab で実際にコードを実行しながら進めることを想定していますが、コードと解説を読み進めるだけでも学習できます。
 
-## 重要: 環境の準備
+## **重要**
 - [セットアップと認証](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb) のセクションを完了し、`GEMINI_API_KEY` の設定が済んでいることを確認してください。
 - もしエラーが出たら、[Gemini in Google Colab](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=7d140654) を使い、コードの説明やデバッグをして解決を試みてください。
+- 生成されたすべての画像には、信頼性検証のために SynthID ウォーターマークが含まれています。詳細は[公式ドキュメント](https://ai.google.dev/gemini-api/docs/image-generation?hl=ja) をご覧ください。
+- - データの取り扱い方については、[Google による使用者のデータの利用方法](https://ai.google.dev/gemini-api/terms?hl=ja#data-use-unpaid) を必ずお読みください。
+- 企業での利用や、より高度なプライバシー保護が必要な場合は、有料の Google Cloud の Vertex AI をご検討ください。
 
 
 ### 学習のためのリポジトリをクローン
@@ -102,7 +105,7 @@ Nano Banana の能力を最大限に引き出すには、プロンプトの書�
 # 画像生成のためのプロンプト
 # 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
 prompt = """
-かわいいステッカーアート。幸せそうなレッサーパンダが小さな竹の帽子をかぶり、笹の葉を食べている。
+かわいいステッカーアート。幸せそうなパンダが小さな竹の帽子をかぶり、笹の葉を食べている。
 太くてクリーンな線、セル画風のシンプルな陰影、鮮やかな色使い。
 背景は白。
 """
@@ -183,7 +186,6 @@ display(edited_image)
 
 このように、変更したい部分と、変更したくない部分を明確に指示することで、狙い通りの編集が可能になります。
 
-> **注**: 生成されたすべての画像には、信頼性検証のために SynthID ウォーターマークが含まれています。詳細は[公式ドキュメント](https://ai.google.dev/gemini-api/docs/image-generation?hl=ja) をご覧ください。
 
 ## 5. Webサイトのランディングページをデザインする
 
