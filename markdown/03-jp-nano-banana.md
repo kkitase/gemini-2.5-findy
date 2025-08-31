@@ -19,6 +19,7 @@
 - もしエラーが出たら、[Gemini in Google Colab](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=7d140654) を使い、コードの説明やデバッグをして解決を試みてください。
 - 生成されたすべての画像には、信頼性検証のために SynthID ウォーターマークが含まれています。詳細は[公式ドキュメント](https://ai.google.dev/gemini-api/docs/image-generation?hl=ja) をご覧ください。
 - データの取り扱い方については、[Google による使用者のデータの利用方法](https://ai.google.dev/gemini-api/terms?hl=ja#data-use-unpaid) を必ずお読みください。
+- 日本語のプロンプトで正しく、イメージを生成できない時は英語にしてみてください。
 - 企業での利用や、より高度なプライバシー保護が必要な場合は、有料の Google Cloud の Vertex AI をご検討ください。
 
 
@@ -64,6 +65,13 @@ prompt = """
 満足げに眺めている。背景はぼかし、人物を際立たせる。
 明るく、希望に満ちた雰囲気のポートレート。
 """
+# 英語プロンプトの例
+# prompt = """
+# A young Japanese potter in a modern and stylish studio, holding his work in his hands,
+# looking at it with satisfaction.
+# The background is blurred to make the person stand out.
+# A bright and hopeful portrait.
+# """
 
 # 変数を初期化
 image = None
@@ -107,6 +115,12 @@ prompt = """
 太くてクリーンな線、セル画風のシンプルな陰影、鮮やかな色使い。
 背景は白。
 """
+# 英語プロンプトの例
+# prompt = """
+# Cute sticker art. A happy panda wearing a small bamboo hat and eating bamboo leaves.
+# Thick, clean lines, cel-shaded simple shadows, and vibrant colors.
+# The background is white.
+# """
 
 # 変数を初期化
 image = None
@@ -529,7 +543,7 @@ display(person_image)
 
 ```python
 # ポーズ指示に使うスケッチのパス
-sketch_image_path = '/content/gemini-2.5-findy/assets/data/boningen4.jpeg'
+sketch_image_path = '/content/gemini-2.5-findy/assets/data/yoga1.jpeg'
 sketch_image = Image.open(sketch_image_path)
 
 print("指示に使うスケッチ:")
@@ -538,9 +552,9 @@ display(sketch_image)
 # スケッチを使った画像編集のプロンプト
 # 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
 prompt = """
-入力した画像を以下の内容に沿って変更してください。
+入力したすべての画像を以下の内容に沿って変更してください。
 【内容】
-・左の男性に、右のスケッチと同じポーズをとらせる
+・左の男性に、スケッチと同じポーズをとらせる
 """
 
 # 変数を初期化
@@ -562,4 +576,56 @@ for part in response.candidates[0].content.parts:
         break
 
 display(posed_image)
+```
+
+```python
+# 複数の画像を生成
+# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
+prompt = """
+入力したすべての画像を以下の内容に沿って変更してください。
+【内容】
+・左の男性に、スケッチと同じポーズをとらせる
+"""
+
+# 編集したい人物画像のパスをリストで定義
+person_image_paths = [
+    '/content/gemini-2.5-findy/assets/data/yoga2.jpeg',
+    '/content/gemini-2.5-findy/assets/data/yoga3.jpeg',
+    '/content/gemini-2.5-findy/assets/data/yoga4.jpeg',
+]
+
+# 生成した画像を保存するリストを初期化
+generated_images = []
+
+# 3枚の画像を順番に処理
+for i, path in enumerate(person_image_paths):
+    print(f"{i+1}枚目の画像を処理中: {path}")
+    
+    # 人物画像を読み込む
+    person_image = Image.open(path)
+
+    # モデルを呼び出して画像を編集
+    # sketch_image は事前に定義されている必要があります
+    response = client.models.generate_content(
+        model=MODEL_ID,
+        contents=[prompt, person_image, sketch_image], # テキスト、スケッチ画像、生成した人物画像の3つをリストで渡す
+    )
+
+    # 最初の画像候補を処理
+    if response.candidates and response.candidates[0].content.parts:
+        for part in response.candidates[0].content.parts:
+            if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
+                posed_image = Image.open(BytesIO(part.inline_data.data))
+                
+                # ファイル名にインデックスを追加して保存
+                output_path = f'posed_person_male_{i}.png'
+                posed_image.save(output_path)
+                print(f"ポーズを編集した画像を '{output_path}' として保存しました。")
+                
+                generated_images.append(posed_image)
+                break # 1つの入力に対して1つの画像を生成して次へ
+
+# 生成されたすべての画像を表示
+for image in generated_images:
+    display(image)
 ```
