@@ -14,6 +14,12 @@ Gemini API を利用する環境には、手軽に試せる[「Google AI Studio�
 
 以降の解説は、Google Colab で実際にコードを実行しながら進めることを想定していますが、コードと解説を読み進めるだけでも学習できます。
 
+
+## **重要**
+- データの取り扱い方については、[Google による使用者のデータの利用方法](https://ai.google.dev/gemini-api/terms?hl=ja#data-use-unpaid) を必ずお読みください。
+- 企業での利用や、より高度なプライバシー保護が必要な場合は、有料の Google Cloud の Vertex AI をご検討ください。
+  
+
 ## 1. Gemini API キーを入手し、Google Colab に設定する
 
 まずは、Gemini API キーを入手し、Google Colab に設定します。
