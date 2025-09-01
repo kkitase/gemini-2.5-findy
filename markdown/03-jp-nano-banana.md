@@ -60,18 +60,20 @@ MODEL_ID = "gemini-2.5-flash-image-preview"
 
 # 画像生成のためのプロンプト
 # 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
-モダンでおしゃれな工房で、日本の若い陶芸家が作品を手に持ち、
+prompt = """入力した画像を以下の内容に沿って変更してください。
+【内容】
+モダンでおしゃれな工房で、日本の若い陶芸家が作品を手に持っている。
 満足げに眺めている。背景はぼかし、人物を際立たせる。
 明るく、希望に満ちた雰囲気のポートレート。
 """
+
 # 英語プロンプトの例
-# prompt = """
-# A young Japanese potter in a modern and stylish studio, holding his work in his hands,
-# looking at it with satisfaction.
-# The background is blurred to make the person stand out.
-# A bright and hopeful portrait.
-# """
+english_prompt = """
+A young Japanese potter in a modern and stylish studio, holding his work in his hands,
+looking at it with satisfaction.
+The background is blurred to make the person stand out.
+A bright and hopeful portrait.
+"""
 
 # 変数を初期化
 image = None
@@ -116,12 +118,11 @@ prompt = """
 背景は白。
 """
 # 英語プロンプトの例
-# prompt = """
-# Cute sticker art. A happy panda wearing a small bamboo hat and eating bamboo leaves.
-# Thick, clean lines, cel-shaded simple shadows, and vibrant colors.
-# The background is white.
-# """
-
+english_prompt = """
+Cute sticker art. A happy panda wearing a small bamboo hat and eating bamboo leaves.
+Thick, clean lines, cel-shaded simple shadows, and vibrant colors.
+The background is white.
+"""
 # 変数を初期化
 image = None
 
@@ -195,6 +196,11 @@ prompt = """入力した画像を以下の内容に沿って変更してくだ�
 【内容】
 ・猫にパーティー用の小さな帽子をかぶせる
 ・背景や猫の他の部分は変更しない
+"""
+# 英語プロンプトの例
+english_prompt = """Modify the input image according to the following instructions.
+Put a small party hat on the cat.
+Do not change the background or any other part of the cat.
 """
 
 # 変数を初期化
@@ -366,8 +372,6 @@ prompt = """以下の内容に沿って画像を生成してください。
 ・缶は冷たく、水滴がついており、砕いた氷の上に置かれている
 ・背景はシャープでモダンな青いグラデーション
 ・缶に「SPARK」の文字をスタイリッシュなフォントで描く
-・エネルギッシュで爽快なイメージ
-・高画質
 """
 
 # 変数を初期化
@@ -471,7 +475,6 @@ prompt = """
 ・背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更する
 ・人物や商品には影響を与えない
 """
-# 上記プロンプトで写真を生成できない時は英語にしてみてください。
 
 # 変数を初期化
 ad_image_final = None
@@ -503,19 +506,16 @@ display(ad_image_final)
 # 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
 prompt = """
 以下の内容に沿って画像を生成してください。
-【内容】
-・被写体: ヨガの木のポーズをしている男性の全身
-・場所: 静かなヨガスタジオ
-・背景: ミニマルで明るい
-・スタイル: プロのカメラマンが高品質な機材で撮影したような、リアルな写真
+・被写体: ヨガの木のポーズをしている男性
+・スタイル: プロのカメラマンが撮影したような、リアルな写真
 """
 
 # 英語プロンプトの例
-# prompt = """
-# A full-body photograph of a man in the tree yoga pose.
-# The setting is a quiet yoga studio with a minimal and bright background.
-#The image should be realistic, as if taken by a professional photographer with high-quality equipment.
-# """
+english_prompt = """
+A full-body photograph of a man in the tree yoga pose.
+The setting is a quiet yoga studio with a minimal and bright background.
+The image should be realistic, as if taken by a professional photographer with high-quality equipment.
+"""
 
 # 変数を初期化
 person_image = None
@@ -523,7 +523,7 @@ person_image = None
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
     model=MODEL_ID,
-    contents=prompt,
+    contents=prompt, # 写真を生成できない時は `english_prompt` にしてみてください
 )
 
 # 結果から画像を抽出し、後続の処理で使えるように変数に格納する
@@ -554,7 +554,7 @@ display(sketch_image)
 prompt = """
 入力したすべての画像を以下の内容に沿って変更してください。
 【内容】
-・左の男性に、スケッチと同じポーズをとらせる
+・添付のスケッチと同じポーズをとってください
 """
 
 # 変数を初期化
@@ -577,21 +577,20 @@ for part in response.candidates[0].content.parts:
 
 display(posed_image)
 ```
-
+さらに、この生成した男性に、複数のポーズを撮らせてみましょう。
 ```python
 # 複数の画像を生成
 # 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
 prompt = """
 入力したすべての画像を以下の内容に沿って変更してください。
 【内容】
-・左の男性に、スケッチと同じポーズをとらせる
+・添付のスケッチと同じポーズをとってください
 """
 
 # 編集したい人物画像のパスをリストで定義
 person_image_paths = [
     '/content/gemini-2.5-findy/assets/data/yoga2.jpeg',
-    '/content/gemini-2.5-findy/assets/data/yoga3.jpeg',
-    '/content/gemini-2.5-findy/assets/data/yoga4.jpeg',
+    '/content/gemini-2.5-findy/assets/data/yoga3.jpeg'
 ]
 
 # 生成した画像を保存するリストを初期化
