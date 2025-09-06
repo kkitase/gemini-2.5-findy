@@ -438,10 +438,18 @@ if 'ad_image' in locals() and ad_image is not None:
 
     # プロンプトを定義します。
     # 最初のメッセージには、編集のベースとなる画像(ad_image)を含めます。
-    prompt_add_person = '''
+    # 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+    use_english = False
+
+    prompt_jp = '''
     この画像を、スポーティーな若い女性が笑顔で持っているように変更してください。
     商品の見え方や背景の雰囲気は維持してください。
     '''
+    prompt_en = '''
+    Change this image so that a sporty young woman is holding it with a smile.
+    Please maintain the appearance of the product and the atmosphere of the background.
+    '''
+    prompt_add_person = prompt_en if use_english else prompt_jp
     
     # モデルにプロンプトと画像を送信して、編集を依頼します。
     response = chat.send_message([prompt_add_person, ad_image])
@@ -474,7 +482,12 @@ else:
 if 'chat' in locals() and 'ad_image_with_person' in locals() and ad_image_with_person is not None:
     # 2回目以降のメッセージでは、画像を送る必要はありません。
     # チャットが文脈（直前の画像）を記憶しています。
-    prompt_change_logo = "缶のロゴを「SPARK」から「AQUA」に自然な形で変更してください。フォントスタイルは元に似せてください。"
+    # 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+    use_english = False
+
+    prompt_jp = "缶のロゴを「SPARK」から「AQUA」に自然な形で変更してください。フォントスタイルは元に似せてください。"
+    prompt_en = "Please change the logo on the can from 'SPARK' to 'AQUA' in a natural way. Please make the font style similar to the original."
+    prompt_change_logo = prompt_en if use_english else prompt_jp
     
     # 新しい指示を送信します。
     response = chat.send_message([prompt_change_logo])
@@ -505,7 +518,12 @@ else:
 # ad_image_new_logo が前のステップで生成されていることを確認します。
 if 'chat' in locals() and 'ad_image_new_logo' in locals() and ad_image_new_logo is not None:
     # さらに指示を続けます。
-    prompt_change_bg = "背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。"
+    # 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+    use_english = False
+
+    prompt_jp = "背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。"
+    prompt_en = "Please change the entire background to a vibrant gradient of warm orange colors. Do not affect the person or the product."
+    prompt_change_bg = prompt_en if use_english else prompt_jp
     
     # 新しい指示を送信します。
     response = chat.send_message([prompt_change_bg])
@@ -624,4 +642,52 @@ if 'person_image' in locals() and person_image is not None:
         print("画像の編集に失敗しました。")
 else:
     print("ポーズの変更をスキップします。前のステップが正常に完了しているか確認してください。")
+```
+
+### 7.4. 別のポーズを試します（チャット継続）
+
+さらに別のスケッチを使って、ポーズを変更してみましょう。`chat` オブジェクトは前のステップから継続して利用します。
+
+```python
+# posed_image が前のステップで生成されていることを確認します。
+if 'chat' in locals() and 'posed_image' in locals() and posed_image is not None:
+    # ポーズ指示に使う別のスケッチのパス
+    sketch_image_path_2 = '/content/gemini-2.5-findy/assets/data/yoga2.jpeg'
+    sketch_image_2 = Image.open(sketch_image_path_2)
+
+    print("指示に使う別のスケッチ:")
+    display(sketch_image_2)
+
+    # スケッチを使った画像編集のプロンプト
+    # 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+    use_english = True
+
+    prompt_jp_2 = '''
+    入力した人物写真の人物に、添付したスケッチと同じポーズをとらせてください。
+    服装や背景は元の写真のものを維持してください。
+    '''
+    prompt_en_2 = '''
+    Please make the person in the input photo assume the same pose as in the attached sketch.
+    Maintain the original clothing and background from the photo.
+    '''
+    prompt_2 = prompt_en_2 if use_english else prompt_jp_2
+
+    # チャットを継続し、モデルにプロンプトと新しいスケッチを送信します。
+    response_2 = chat.send_message([prompt_2, sketch_image_2])
+
+    # 結果を表示
+    posed_image_2 = None
+    for part in response_2.candidates[0].content.parts:
+        if part.inline_data is not None:
+            posed_image_2 = Image.open(BytesIO(part.inline_data.data))
+            break
+    
+    if posed_image_2:
+        posed_image_2.save('posed_person_male_2.png')
+        print("別のポーズに編集した画像を 'posed_person_male_2.png' として保存しました。")
+        display(posed_image_2)
+    else:
+        print("画像の編集に失敗しました。")
+else:
+    print("別のポーズの変更をスキップします。前のステップが正常に完了しているか確認してください。")
 ```
