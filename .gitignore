@@ -193,5 +193,7 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 .DS_Store
-.memo
-
+memo.md
+docs.md
+style.md
+gemini.md

@@ -1,4 +1,4 @@
-# Google Colab ではじめる Gemini API、今話題の画像生成 AI モデル「Nano Banana」を試してみよう。
+# Google Colab ではじめる Gemini API、今話題の画像生成 AI モデル「Nano Banana」を試してみましょう。
 
 「テキストから、あっという間にすごいクオリティの画像が作れたら…」
 「写真の一部だけを、まるで魔法のように自然に修正したい…」
@@ -23,7 +23,7 @@
 - 企業での利用や、より高度なプライバシー保護が必要な場合は、有料の Google Cloud の Vertex AI をご検討ください。
 
 
-### 学習のためのリポジトリをクローン
+### 学習のためのリポジトリをクローンします
 ```python
 !git clone https://github.com/kkitase/gemini-2.5-findy.git
 %cd gemini-2.5-findy
@@ -40,7 +40,7 @@
 - **複数画像の合成**: 複数の画像の良い部分を組み合わせて、新しい画像を創り出します。
 - **対話による修正**: 一度の指示で終わらず、「もっと明るくして」のように対話しながら画像の完成度を高めていけます。
 
-## 2. テキストから画像を生成する
+## 2. テキストから画像を生成します
 
 まずは基本のテキストからの画像生成を試してみましょう。プロンプト（指示文）を工夫することで、驚くほど多彩な表現が可能です。
 
@@ -149,7 +149,7 @@ display(image)
 # 水彩画風や、油絵風など、他のスタイルも試してみましょう。
 ```
 
-### 箇条書きで分かりやすく指示する
+### 箇条書きで分かりやすく指示します
 
 物語風の長い文章が苦手な場合は、箇条書きで要点を伝えるのも有効です。特に、生成したい画像の要素が明確に決まっている場合に便利です。
 
@@ -172,7 +172,7 @@ display(image)
 ```
 このように、変更したい対象と内容を明確に分けることで、AI が指示を理解しやすくなります。
 
-## 4. 画像を編集する
+## 4. 画像を編集します
 
 Nano Banana のもう一つの強力な機能が、既存の画像と言葉の指示を組み合わせて編集する機能です。
 
@@ -232,7 +232,7 @@ display(edited_image)
 このように、変更したい部分と、変更したくない部分を明確に指示することで、狙い通りの編集が可能になります。
 
 
-## 5. Webサイトのランディングページをデザインする
+## 5. Webサイトのランディングページをデザインします
 
 Nano Banana は、具体的なUIコンポーネントやレイアウト構造も理解できます。これを利用して、Webサイトのランディングページ（LP）のデザイン案を生成させてみましょう。
 
@@ -240,7 +240,7 @@ Nano Banana は、具体的なUIコンポーネントやレイアウト構造も
 
 Nano Banana は、具体的な UI コンポーネントやレイアウト構造も理解できます。これを利用して、Web サイトのランディングページ（LP）のデザイン案を生成させてみましょう。
 
-### 5.1. 基本的なLPデザイン
+### 5.1. 基本的なLPをデザインします
 
 まずは、基本的な旅行アプリのLPをデザインします。
 
@@ -276,7 +276,7 @@ for part in response.candidates[0].content.parts:
 display(web_design_image)
 ```
 
-### 5.2. メニューの追加
+### 5.2. メニューを追加します
 
 次に、生成したLPにグローバルナビゲーションメニューを追加してみましょう。
 
@@ -320,7 +320,7 @@ for part in response.candidates[0].content.parts:
 display(web_design_image_with_menu)
 ```
 
-### 5.3. バナーの変更
+### 5.3. バナーを変更します
 
 最後に、ヒーローセクションの背景画像を、より具体的なテーマに変更してみましょう。
 
@@ -357,11 +357,11 @@ for part in response.candidates[0].content.parts:
 display(web_design_image_cherry_blossom)
 ```
 
-## 6. 広告用の商品写真を生成し、対話的に編集する
+## 6. 広告用の商品写真を生成し、対話的に編集します
 
 新商品の広告キャンペーンで使うような、プロフェッショナルで魅力的な画像を生成し、さらにそこから対話を通じて修正を加えていく過程を体験してみましょう。
 
-まずは、ベースとなる飲料の広告写真を作成します。
+### 6.1. ベースとなる飲料の広告写真を作成します
 
 ```python
 # 広告写真のプロンプト
@@ -394,110 +394,113 @@ for part in response.candidates[0].content.parts:
 display(ad_image)
 ```
 
-### 6.1. 生成した画像に人物を追加する
+### 6.2. 対話を開始し、人物を追加します
 
-次に、この商品写真に人物を追加して、より魅力的な広告にしてみましょう。「この缶を人が持っているように」と指示します。
-
-```python
-# 人物を追加するプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
-入力した画像を以下の内容に沿って変更してください。
-【内容】
-・ドリンクの缶を、スポーティーな若い女性が笑顔で持つ
-・商品の見え方や背景の雰囲気は維持する
-"""
-
-# 変数を初期化
-ad_image_with_person = None
-
-# モデルを呼び出して画像を編集
-response = client.models.generate_content(
-    model=MODEL_ID,
-    contents=[prompt, ad_image], # テキストプロンプトと元の画像を渡す
-)
-
-# 結果を表示
-for part in response.candidates[0].content.parts:
-  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
-      ad_image_with_person = Image.open(BytesIO(part.inline_data.data))
-      ad_image_with_person.save('ad_with_person.png')
-      print("人物を追加した画像を 'ad_with_person.png' として保存しました。")
-
-# Colab上に画像を表示
-display(ad_image_with_person)
-```
-
-### 6.2. 商品のロゴを変更する
-
-急なデザイン変更にも対応できます。缶に描かれたロゴを、別の名前に変更してみましょう。
+ベースの広告写真に人物を追加します。ここから対話（チャット）を開始し、ステップごとに画像を編集していきます。
 
 ```python
-# ロゴを変更するプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
-入力した画像を以下の内容に沿って変更してください。
-【内容】
-・缶のロゴを「SPARK」から「AQUA」に自然な形で変更する
-・フォントスタイルは元に似せる
-"""
+# ad_image が前のステップで生成されていることを確認します。
+if 'ad_image' in locals() and ad_image is not None:
+    # 画像編集のための新しいチャットセッションを開始します。
+    chat = client.chats.create(model=MODEL_ID)
 
-# 変数を初期化
-ad_image_new_logo = None
+    # プロンプトを定義します。
+    # 最初のメッセージには、編集のベースとなる画像(ad_image)を含めます。
+    prompt_add_person = """
+    この画像を、スポーティーな若い女性が笑顔で持っているように変更してください。
+    商品の見え方や背景の雰囲気は維持してください。
+    """
+    
+    # モデルにプロンプトと画像を送信して、編集を依頼します。
+    response = chat.send_message([prompt_add_person, ad_image])
 
-# モデルを呼び出して画像を編集
-response = client.models.generate_content(
-    model=MODEL_ID,
-    contents=[prompt, ad_image_with_person], # 人物追加後の画像をベースにする
-)
-
-# 結果を表示
-for part in response.candidates[0].content.parts:
-  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
-      ad_image_new_logo = Image.open(BytesIO(part.inline_data.data))
-      ad_image_new_logo.save('ad_new_logo.png')
-      print("ロゴを変更した画像を 'ad_new_logo.png' として保存しました。")
-
-# Colab上に画像を表示
-display(ad_image_new_logo)
+    # レスポンスから編集された画像を抽出します。
+    ad_image_with_person = None
+    for part in response.candidates[0].content.parts:
+        if part.inline_data is not None:
+            ad_image_with_person = Image.open(BytesIO(part.inline_data.data))
+            break
+    
+    # 編集された画像があれば、保存して表示します。
+    if ad_image_with_person:
+        ad_image_with_person.save('ad_with_person.png')
+        print("人物を追加した画像を 'ad_with_person.png' として保存しました。")
+        display(ad_image_with_person)
+    else:
+        print("画像の編集に失敗しました。")
+else:
+    # ベースとなる画像がない場合はエラーメッセージを表示します。
+    print("チャットを開始できません。前のステップで ad_image が正常に生成されているか確認してください。")
 ```
 
-### 6.3. 背景の色を調整する
+### 6.3. 商品のロゴを変更します
 
-最後に、商品のフレーバーに合わせて背景色を変更してみましょう。オレンジ味を想定して、背景を暖色系に変えてみます。
+次に、チャットを続けて、商品のロゴを「SPARK」から「AQUA」に変更します。前のステップで `chat` オブジェクトが作成されているため、そのまま利用できます。
 
 ```python
-# 背景色を変更するプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
-入力した画像を以下の内容に沿って変更してください。
-【内容】
-・背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更する
-・人物や商品には影響を与えない
-"""
+# ad_image_with_person が前のステップで生成されていることを確認します。
+if 'chat' in locals() and 'ad_image_with_person' in locals() and ad_image_with_person is not None:
+    # 2回目以降のメッセージでは、画像を送る必要はありません。
+    # チャットが文脈（直前の画像）を記憶しています。
+    prompt_change_logo = "缶のロゴを「SPARK」から「AQUA」に自然な形で変更してください。フォントスタイルは元に似せてください。"
+    
+    # 新しい指示を送信します。
+    response = chat.send_message([prompt_change_logo])
 
-# 変数を初期化
-ad_image_final = None
+    # レスポンスから編集された画像を抽出します。
+    ad_image_new_logo = None
+    for part in response.candidates[0].content.parts:
+        if part.inline_data is not None:
+            ad_image_new_logo = Image.open(BytesIO(part.inline_data.data))
+            break
 
-# モデルを呼び出して画像を編集
-response = client.models.generate_content(
-    model=MODEL_ID,
-    contents=[prompt, ad_image_new_logo], # ロゴ変更後の画像をベースにする
-)
-
-# 結果を表示
-for part in response.candidates[0].content.parts:
-  if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
-      ad_image_final = Image.open(BytesIO(part.inline_data.data))
-      ad_image_final.save('ad_final.png')
-      print("最終版の広告画像を 'ad_final.png' として保存しました。")
-
-# Colab上に画像を表示
-display(ad_image_final)
+    # 編集された画像があれば、保存して表示します。
+    if ad_image_new_logo:
+        ad_image_new_logo.save('ad_new_logo.png')
+        print("ロゴを変更した画像を 'ad_new_logo.png' として保存しました。")
+        display(ad_image_new_logo)
+    else:
+        print("画像の編集に失敗しました。")
+else:
+    print("ロゴの変更をスキップします。前のステップが正常に完了しているか確認してください。")
 ```
-このように、一度画像を生成してから、対話を繰り返すことで、細かな要望を反映させながら完成度を高めていくことができます。
 
-## 7. AIで生成した人物のポーズを、スケッチで変更する
+### 6.4. 背景の色を調整します
+
+最後に、商品のフレーバーに合わせて背景色をオレンジに変更します。これも対話の続きとして実行します。
+
+```python
+# ad_image_new_logo が前のステップで生成されていることを確認します。
+if 'chat' in locals() and 'ad_image_new_logo' in locals() and ad_image_new_logo is not None:
+    # さらに指示を続けます。
+    prompt_change_bg = "背景全体を、暖色系のオレンジ色の鮮やかなグラデーションに変更してください。人物や商品には影響を与えないでください。"
+    
+    # 新しい指示を送信します。
+    response = chat.send_message([prompt_change_bg])
+
+    # レスポンスから最終的な画像を抽出します。
+    ad_image_final = None
+    for part in response.candidates[0].content.parts:
+        if part.inline_data is not None:
+            ad_image_final = Image.open(BytesIO(part.inline_data.data))
+            break
+    
+    # 最終的な画像があれば、保存して表示します。
+    if ad_image_final:
+        ad_image_final.save('ad_final.png')
+        print("最終版の広告画像を 'ad_final.png' として保存しました。")
+        display(ad_image_final)
+    else:
+        print("画像の編集に失敗しました。")
+else:
+    print("背景色の変更をスキップします。前のステップが正常に完了しているか確認してください。")
+```
+
+## 7. AIで生成した人物のポーズを、スケッチで変更します
+
+AIで生成した人物の画像でも、簡単なスケッチを使えばポーズを自由に変更できます。
+
+### 7.1. AIで人物画像を生成します
 
 まず、ベースとなる人物画像をAIで生成します。今回は「ヨガの木のポーズをしている男性」を生成してみましょう。
 
@@ -523,7 +526,7 @@ person_image = None
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
     model=MODEL_ID,
-    contents=prompt, # 写真を生成できない時は `english_prompt` にしてみてください
+    contents=english_prompt, # 写真を生成できない時は `english_prompt` にしてみてください
 )
 
 # 結果から画像を抽出し、後続の処理で使えるように変数に格納する
@@ -539,92 +542,51 @@ print("生成された元になる人物写真:")
 display(person_image)
 ```
 
-次に、この生成した男性の画像に、簡単な棒人間のスケッチで別のポーズをとらせてみましょう。
+### 7.3. 複数の異なるポーズを試します（チャット継続）
+
+次に、この生成した男性の画像に、簡単な棒人間のスケッチで別のポーズをとらせてみましょう。Section 6 と同様に、ここからチャットを開始して編集します。
 
 ```python
-# ポーズ指示に使うスケッチのパス
-sketch_image_path = '/content/gemini-2.5-findy/assets/data/yoga1.jpeg'
-sketch_image = Image.open(sketch_image_path)
+# person_image が前のステップで生成されていることを確認します。
+if 'person_image' in locals() and person_image is not None:
+    # 画像編集のための新しいチャットセッションを開始します。
+    chat = client.chats.create(model=MODEL_ID)
 
-print("指示に使うスケッチ:")
-display(sketch_image)
+    # ポーズ指示に使うスケッチのパス
+    sketch_image_path = '/content/gemini-2.5-findy/assets/data/yoga1.jpeg'
+    sketch_image = Image.open(sketch_image_path)
 
-# スケッチを使った画像編集のプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
-入力したすべての画像を以下の内容に沿って変更してください。
-【内容】
-・添付のスケッチと同じポーズをとってください
-"""
+    print("指示に使うスケッチ:")
+    display(sketch_image)
 
-# 変数を初期化
-posed_image = None
+    # スケッチを使った画像編集のプロンプト
+    prompt = """
+    入力した人物写真の人物に、添付したスケッチと同じポーズをとらせてください。
+    服装や背景は元の写真のものを維持してください。
+    """
+    # 英語プロンプトの例
+    english_prompt = """
+    Please make the person in the input photo assume the same pose as in the attached sketch.
+    Maintain the original clothing and background from the photo.
+    """
 
-# モデルを呼び出して画像を編集
-# person_imageがNoneでないことを確認
-response = client.models.generate_content(
-    model=MODEL_ID,
-    contents=[prompt, person_image, sketch_image], # テキスト、スケッチ画像、生成した人物画像の3つをリストで渡す
-)
+    # チャットを開始し、モデルにプロンプト、元の画像、スケッチを送信します。
+    # 写真を生成できない時は `english_prompt` にしてみてください
+    response = chat.send_message([english_prompt, person_image, sketch_image])
 
-# 結果を表示
-for part in response.candidates[0].content.parts:
-    if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
-        posed_image = Image.open(BytesIO(part.inline_data.data))
-        posed_image.save('posed_person_male.png')
-        print("ポーズを編集した画像を 'posed_person_male.png' として保存しました。")
-        break
-
-display(posed_image)
-```
-さらに、この生成した男性に、複数のポーズを撮らせてみましょう。
-```python
-# 複数の画像を生成
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
-入力したすべての画像を以下の内容に沿って変更してください。
-【内容】
-・添付のスケッチと同じポーズをとってください
-"""
-
-# 編集したい人物画像のパスをリストで定義
-person_image_paths = [
-    '/content/gemini-2.5-findy/assets/data/yoga2.jpeg',
-    '/content/gemini-2.5-findy/assets/data/yoga3.jpeg'
-]
-
-# 生成した画像を保存するリストを初期化
-generated_images = []
-
-# 3枚の画像を順番に処理
-for i, path in enumerate(person_image_paths):
-    print(f"{i+1}枚目の画像を処理中: {path}")
+    # 結果を表示
+    posed_image = None
+    for part in response.candidates[0].content.parts:
+        if part.inline_data is not None:
+            posed_image = Image.open(BytesIO(part.inline_data.data))
+            break
     
-    # 人物画像を読み込む
-    person_image = Image.open(path)
-
-    # モデルを呼び出して画像を編集
-    # sketch_image は事前に定義されている必要があります
-    response = client.models.generate_content(
-        model=MODEL_ID,
-        contents=[prompt, person_image, sketch_image], # テキスト、スケッチ画像、生成した人物画像の3つをリストで渡す
-    )
-
-    # 最初の画像候補を処理
-    if response.candidates and response.candidates[0].content.parts:
-        for part in response.candidates[0].content.parts:
-            if part.inline_data is not None and part.inline_data.mime_type.startswith('image/'):
-                posed_image = Image.open(BytesIO(part.inline_data.data))
-                
-                # ファイル名にインデックスを追加して保存
-                output_path = f'posed_person_male_{i}.png'
-                posed_image.save(output_path)
-                print(f"ポーズを編集した画像を '{output_path}' として保存しました。")
-                
-                generated_images.append(posed_image)
-                break # 1つの入力に対して1つの画像を生成して次へ
-
-# 生成されたすべての画像を表示
-for image in generated_images:
-    display(image)
+    if posed_image:
+        posed_image.save('posed_person_male_1.png')
+        print("ポーズを編集した画像を 'posed_person_male_1.png' として保存しました。")
+        display(posed_image)
+    else:
+        print("画像の編集に失敗しました。")
+else:
+    print("ポーズの変更をスキップします。前のステップが正常に完了しているか確認してください。")
 ```
