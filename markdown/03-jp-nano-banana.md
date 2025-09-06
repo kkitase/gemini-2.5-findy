@@ -19,7 +19,6 @@
 - もしエラーが出たら、[Gemini in Google Colab](https://colab.research.google.com/github/kkitase/gemini-2.5-findy/blob/main/notebooks/00-jp-setup-and-authentication.ipynb#scrollTo=7d140654) を使い、コードの説明やデバッグをして解決を試みてください。
 - 生成されたすべての画像には、信頼性検証のために SynthID ウォーターマークが含まれています。詳細は[公式ドキュメント](https://ai.google.dev/gemini-api/docs/image-generation?hl=ja) をご覧ください。
 - データの取り扱い方については、[Google による使用者のデータの利用方法](https://ai.google.dev/gemini-api/terms?hl=ja#data-use-unpaid) を必ずお読みください。
-- 日本語のプロンプトで正しく、イメージを生成できない時は英語にしてみてください。
 - 企業での利用や、より高度なプライバシー保護が必要な場合は、有料の Google Cloud の Vertex AI をご検討ください。
 
 
@@ -59,21 +58,22 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 MODEL_ID = "gemini-2.5-flash-image-preview"
 
 # 画像生成のためのプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """入力した画像を以下の内容に沿って変更してください。
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''入力した画像を以下の内容に沿って変更してください。
 【内容】
 モダンでおしゃれな工房で、日本の若い陶芸家が作品を手に持っている。
 満足げに眺めている。背景はぼかし、人物を際立たせる。
 明るく、希望に満ちた雰囲気のポートレート。
-"""
-
-# 英語プロンプトの例
-english_prompt = """
+'''
+prompt_en = '''
 A young Japanese potter in a modern and stylish studio, holding his work in his hands,
 looking at it with satisfaction.
 The background is blurred to make the person stand out.
 A bright and hopeful portrait.
-"""
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 変数を初期化
 image = None
@@ -111,18 +111,21 @@ Nano Banana の能力を最大限に引き出すには、プロンプトの書�
 
 ```python
 # 画像生成のためのプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''
 かわいいステッカーアート。幸せそうなパンダが小さな竹の帽子をかぶり、笹の葉を食べている。
 太くてクリーンな線、セル画風のシンプルな陰影、鮮やかな色使い。
 背景は白。
-"""
-# 英語プロンプトの例
-english_prompt = """
+'''
+prompt_en = '''
 Cute sticker art. A happy panda wearing a small bamboo hat and eating bamboo leaves.
 Thick, clean lines, cel-shaded simple shadows, and vibrant colors.
 The background is white.
-"""
+'''
+prompt = prompt_en if use_english else prompt_jp
+
 # 変数を初期化
 image = None
 
@@ -191,17 +194,19 @@ display(image_to_edit)
 
 ```python
 # 画像編集のプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """入力した画像を以下の内容に沿って変更してください。
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''入力した画像を以下の内容に沿って変更してください。
 【内容】
 ・猫にパーティー用の小さな帽子をかぶせる
 ・背景や猫の他の部分は変更しない
-"""
-# 英語プロンプトの例
-english_prompt = """Modify the input image according to the following instructions.
+'''
+prompt_en = '''Modify the input image according to the following instructions.
 Put a small party hat on the cat.
 Do not change the background or any other part of the cat.
-"""
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 変数を初期化
 edited_image = None
@@ -246,14 +251,22 @@ Nano Banana は、具体的な UI コンポーネントやレイアウト構造�
 
 ```python
 # Webサイトデザインのプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """以下の内容に沿って画像を生成してください。
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''以下の内容に沿って画像を生成してください。
 【内容】
 ・モダンでミニマルな旅行アプリのランディングページのUIデザイン
 ・ヒーローセクションに「Explore the World Unknown」というキャッチコピーと、夕暮れの美しいビーチの背景画像
 ・「Search by Destination」「Search by Theme」「Search by Budget」の3つの検索カードを配置
 ・配色は青と白を基調とし、クリーンで信頼感のある印象
-"""
+'''
+prompt_en = '''A modern, minimal UI design for a travel app landing page.
+- Hero section with the catchphrase "Explore the World Unknown" and a background image of a beautiful beach at sunset.
+- Three search cards: "Search by Destination," "Search by Theme," and "Search by Budget."
+- Color palette based on blue and white for a clean and trustworthy impression.
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 変数を初期化
 web_design_image = None # Initialize the variable
@@ -282,22 +295,24 @@ display(web_design_image)
 
 ```python
 # メニュー追加のプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """以下の内容に沿って画像を生成してください。
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''以下の内容に沿って画像を生成してください。
 【内容】
 ・モダンでミニマルな旅行アプリのランディングページのUIデザイン
 ・ヘッダーに「Home」「Destinations」「About Us」「Contact」のナビゲーションメニューを追加
 ・ヒーローセクションに「Explore the World Unknown」というキャッチコピーと、夕暮れの美しいビーチの背景画像
 ・「Search by Destination」「Search by Theme」「Search by Budget」の3つの検索カードを配置
 ・配色は青と白を基調とし、クリーンで信頼感のある印象
-"""
-
-# prompt = """A modern, minimal UI design for a travel app landing page.
-# - Header navigation: "Home," "Destinations," "About Us," "Contact."
-# - Hero section: A beautiful beach at sunset with the catchphrase "Explore the World Unknown."
-# - Search cards: "Search by Destination," "Search by Theme," "Search by Budget."
-# - Color palette: Blue and white for a clean, trustworthy feel.
-# """
+'''
+prompt_en = '''A modern, minimal UI design for a travel app landing page.
+- Header navigation: "Home," "Destinations," "About Us," "Contact."
+- Hero section: A beautiful beach at sunset with the catchphrase "Explore the World Unknown."
+- Search cards: "Search by Destination," "Search by Theme," "Search by Budget."
+- Color palette: Blue and white for a clean, trustworthy feel.
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 初期化
 web_design_image_with_menu = None
@@ -326,15 +341,24 @@ display(web_design_image_with_menu)
 
 ```python
 # バナー変更のプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """以下の内容に沿って画像を生成してください。
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''以下の内容に沿って画像を生成してください。
 【内容】
 ・モダンでミニマルな旅行アプリのランディングページのUIデザイン
 ・ヘッダーに「Home」「Destinations」「About Us」「Contact」のナビゲーションメニュー
 ・ヒーローセクションに「Explore the World Unknown」というキャッチコピーと、日本の桜並木の美しい背景画像
 ・「Search by Destination」「Search by Theme」「Search by Budget」の3つの検索カードを配置
 ・配色はピンクと白を基調とし、春らしく華やかな印象
-"""
+'''
+prompt_en = '''A modern, minimal UI design for a travel app landing page.
+- Header navigation: "Home," "Destinations," "About Us," "Contact."
+- Hero section: A beautiful background image of a row of cherry blossom trees in Japan with the catchphrase "Explore the World Unknown."
+- Search cards: "Search by Destination," "Search by Theme," "Search by Budget."
+- Color palette: Pink and white for a spring-like, gorgeous feel.
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 変数を初期化
 web_design_image_cherry_blossom = None
@@ -365,14 +389,22 @@ display(web_design_image_cherry_blossom)
 
 ```python
 # 広告写真のプロンプト
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """以下の内容に沿って画像を生成してください。
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = False
+
+prompt_jp = '''以下の内容に沿って画像を生成してください。
 【内容】
 ・新しいエナジードリンク「SPARK」のアルミ缶の製品広告写真
 ・缶は冷たく、水滴がついており、砕いた氷の上に置かれている
 ・背景はシャープでモダンな青いグラデーション
 ・缶に「SPARK」の文字をスタイリッシュなフォントで描く
-"""
+'''
+prompt_en = '''A product advertisement photo of an aluminum can for a new energy drink "SPARK".
+- The can is cold, has water droplets on it, and is placed on crushed ice.
+- The background is a sharp, modern blue gradient.
+- The word "SPARK" is written on the can in a stylish font.
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 変数を初期化
 ad_image = None
@@ -406,10 +438,10 @@ if 'ad_image' in locals() and ad_image is not None:
 
     # プロンプトを定義します。
     # 最初のメッセージには、編集のベースとなる画像(ad_image)を含めます。
-    prompt_add_person = """
+    prompt_add_person = '''
     この画像を、スポーティーな若い女性が笑顔で持っているように変更してください。
     商品の見え方や背景の雰囲気は維持してください。
-    """
+    '''
     
     # モデルにプロンプトと画像を送信して、編集を依頼します。
     response = chat.send_message([prompt_add_person, ad_image])
@@ -506,19 +538,20 @@ AIで生成した人物の画像でも、簡単なスケッチを使えばポー
 
 ```python
 # プロンプトを定義
-# 注意: 下記プロンプトで写真を生成できない時は英語にしてみてください。
-prompt = """
+# 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+use_english = True
+
+prompt_jp = '''
 以下の内容に沿って画像を生成してください。
 ・被写体: ヨガの木のポーズをしている男性
 ・スタイル: プロのカメラマンが撮影したような、リアルな写真
-"""
-
-# 英語プロンプトの例
-english_prompt = """
+'''
+prompt_en = '''
 A full-body photograph of a man in the tree yoga pose.
 The setting is a quiet yoga studio with a minimal and bright background.
 The image should be realistic, as if taken by a professional photographer with high-quality equipment.
-"""
+'''
+prompt = prompt_en if use_english else prompt_jp
 
 # 変数を初期化
 person_image = None
@@ -526,7 +559,7 @@ person_image = None
 # モデルを呼び出して画像を生成
 response = client.models.generate_content(
     model=MODEL_ID,
-    contents=english_prompt, # 写真を生成できない時は `english_prompt` にしてみてください
+    contents=prompt,
 )
 
 # 結果から画像を抽出し、後続の処理で使えるように変数に格納する
@@ -560,19 +593,21 @@ if 'person_image' in locals() and person_image is not None:
     display(sketch_image)
 
     # スケッチを使った画像編集のプロンプト
-    prompt = """
+    # 英語のプロンプトを試す場合は、下の `use_english` を `True` に変更してください。
+    use_english = True
+
+    prompt_jp = '''
     入力した人物写真の人物に、添付したスケッチと同じポーズをとらせてください。
     服装や背景は元の写真のものを維持してください。
-    """
-    # 英語プロンプトの例
-    english_prompt = """
+    '''
+    prompt_en = '''
     Please make the person in the input photo assume the same pose as in the attached sketch.
     Maintain the original clothing and background from the photo.
-    """
+    '''
+    prompt = prompt_en if use_english else prompt_jp
 
     # チャットを開始し、モデルにプロンプト、元の画像、スケッチを送信します。
-    # 写真を生成できない時は `english_prompt` にしてみてください
-    response = chat.send_message([english_prompt, person_image, sketch_image])
+    response = chat.send_message([prompt, person_image, sketch_image])
 
     # 結果を表示
     posed_image = None
